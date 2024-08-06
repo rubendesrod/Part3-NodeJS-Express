@@ -1,7 +1,19 @@
+// Instalacion de express en nuestro programa
 const express = require("express");
 const app = express();
 
+// Middleware para que el body se formatee en JSON
 app.use(express.json());
+
+// Instalación de morgan en nuestro programa
+const morgan = require('morgan')
+
+// Creo un nuevo token para morgan y muestre el contenido en los POST en JSON fromat
+morgan.token('body', (req) => JSON.stringify(req.body))
+
+// Hago uso en la app de morgan y añado todas las variables mas body que es la nueva
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
+
 
 // Array de objetos de personas que hay en la agenda
 let persons = [
@@ -59,7 +71,6 @@ app.delete("/api/persons/:id", (request, response) => {
   // filtrando para que la tenga el mismo id no la inserte en el nuevo
   persons = persons.filter((person) => person.id !== id);
   // Se response con un estado 204 de correcto
-  console.log(persons);
   response.status(204).end();
 });
 
